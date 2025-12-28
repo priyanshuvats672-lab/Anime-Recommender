@@ -1,6 +1,4 @@
-import os
 import pickle
-import gdown
 import streamlit as st
 import pandas as pd
 import requests
@@ -12,20 +10,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Google Drive FILE ID (only for anime.pkl)
-ANIME_ID = "1zu_9DhcoG7qt_qnLErsaV7YdBkswwwBW"
-ANIME_PATH = "anime.pkl"
-
-def download_if_missing(file_id, output):
-    if not os.path.exists(output):
-        url = f"https://drive.google.com/uc?id={file_id}"
-        gdown.download(url, output, quiet=False)
-
-# Download only anime.pkl
-with st.spinner("Loading recommendation models..."):
-    download_if_missing(ANIME_ID, ANIME_PATH)
-
-# Load models
+# Load models directly from repo
 anime_df = pickle.load(open("anime.pkl", "rb"))
 top_k_sim = pickle.load(open("top_k_similarity.pkl", "rb"))
 
@@ -33,7 +18,6 @@ anime_df["User Rating"] = pd.to_numeric(
     anime_df["User Rating"], errors="coerce"
 )
 
-# Background image
 def add_bg_image(image_url):
     st.markdown(
         f"""
@@ -49,10 +33,9 @@ def add_bg_image(image_url):
         unsafe_allow_html=True
     )
 
-# Recommendation function (CORRECT for top_k_sim)
 def recommend(anime_name):
     index = anime_df[anime_df["Title"] == anime_name].index[0]
-    return top_k_sim[index]  # already [(idx, score), ...]
+    return [(int(i), float(s)) for i, s in top_k_sim[index][:5]]
 
 @st.cache_data(show_spinner=False)
 def fetch_anime_poster(anime_name):
@@ -108,3 +91,4 @@ if st.button("Recommend"):
                     "<p style='text-align:center'>⭐ N/A</p>",
                     unsafe_allow_html=True
                 )
+
