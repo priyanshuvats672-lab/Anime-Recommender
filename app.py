@@ -2,8 +2,27 @@ import streamlit as st
 import pickle
 import pandas as pd
 
+import os
+import gdown
+
+# Download if not exists
+if not os.path.exists("anime.pkl"):
+    gdown.download(
+        f"https://drive.google.com/file/d/1zu_9DhcoG7qt_qnLErsaV7YdBkswwwBW/view?usp=sharing",
+        "anime.pkl",
+        quiet=False
+    )
+
+if not os.path.exists("similarity.pkl"):
+    gdown.download(
+        f"https://drive.google.com/file/d/1kfe3l1Kc-83PCBq2uPElcRW2Ej8RRri_/view?usp=sharing",
+        "similarity.pkl",
+        quiet=False
+    )
+
+
 # Load data
-anime_df = pickle.load(open("anime1.pkl", "rb"))
+anime_df = pickle.load(open("anime.pkl", "rb"))
 similarity = pickle.load(open("similarity.pkl", "rb"))
 anime_df['User Rating'] = pd.to_numeric(
     anime_df['User Rating'],
