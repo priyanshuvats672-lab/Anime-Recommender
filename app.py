@@ -1,29 +1,29 @@
-import streamlit as st
-import pickle
-import pandas as pd
-
 import os
+import pickle
 import gdown
+import streamlit as st
+import pandas as pd
+import requests
 
-# Download if not exists
-if not os.path.exists("anime.pkl"):
-    gdown.download(
-        f"https://drive.google.com/file/d/1zu_9DhcoG7qt_qnLErsaV7YdBkswwwBW/view?usp=sharing",
-        "anime.pkl",
-        quiet=False
-    )
+# Google Drive FILE IDs (correct)
+ANIME_ID = "1zu_9DhcoG7qt_qnLErsaV7YdBkswwwBW"
+SIM_ID = "1kfe3l1Kc-83PCBq2uPElcRW2Ej8RRri_"
 
-if not os.path.exists("similarity.pkl"):
-    gdown.download(
-        f"https://drive.google.com/file/d/1kfe3l1Kc-83PCBq2uPElcRW2Ej8RRri_/view?usp=sharing",
-        "similarity.pkl",
-        quiet=False
-    )
+ANIME_PATH = "anime.pkl"
+SIM_PATH = "similarity.pkl"
 
+def download_if_missing(file_id, output):
+    if not os.path.exists(output):
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, output, quiet=False)
 
-# Load data
-anime_df = pickle.load(open("anime.pkl", "rb"))
-similarity = pickle.load(open("similarity.pkl", "rb"))
+download_if_missing(ANIME_ID, ANIME_PATH)
+download_if_missing(SIM_ID, SIM_PATH)
+
+# Load pickle files
+anime_df = pickle.load(open(ANIME_PATH, "rb"))
+similarity = pickle.load(open(SIM_PATH, "rb"))
+
 anime_df['User Rating'] = pd.to_numeric(
     anime_df['User Rating'],
     errors='coerce'
