@@ -21,8 +21,13 @@ download_if_missing(ANIME_ID, ANIME_PATH)
 download_if_missing(SIM_ID, SIM_PATH)
 
 # Load pickle files
+with st.spinner("Loading recommendation models..."):
+    download_if_missing(ANIME_ID, ANIME_PATH)
+    download_if_missing(SIM_ID, SIM_PATH)
+
 anime_df = pickle.load(open(ANIME_PATH, "rb"))
 similarity = pickle.load(open(SIM_PATH, "rb"))
+
 
 anime_df['User Rating'] = pd.to_numeric(
     anime_df['User Rating'],
@@ -85,7 +90,6 @@ selected_anime = st.selectbox(
     "Choose an Anime",
     anime_df['Title'].values
 )
-st.set_page_config(page_title="Anime Recommender", page_icon="🎌")
 add_bg_image(
     "https://images.unsplash.com/photo-1541560052-77ec1bbc09b3"
 )
