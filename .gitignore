@@ -1,7 +1,9 @@
+# Ignore virtual env
 .venv/
-__pycache__/
-*.pyc
-*.pkl
-.env
-.DS_Store
 
+# Ignore big/temporary files
+similarity.pkl
+anime.pkl
+
+# ❌ REMOVE or COMMENT this line if it exists
+# *.pkl
